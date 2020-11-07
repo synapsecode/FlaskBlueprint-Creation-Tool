@@ -4,12 +4,20 @@ import subprocess
 import shutil
 import glob
 
-#TODO: Exception Handling Using Function Decorators
-#TODO: add encoding=utf8 to ALl file opens
-#TODO: Output better stuff
-#TODO: Add Text Colouring???
+def greenText(s): print("\033[92m{}\033[00m".format(s)) #Colors the text green
+def redText(s): print("\033[91m{}\033[00m".format(s)) #Colors the text green
+def cyanText(skk): print("\033[96m{}\033[00m" .format(skk)) #Colors the text cyan
+def yellowText(skk): print("\033[93m{}\033[00m" .format(skk)) #Colors the text yelllow
 
-#! Random Encoding Errors Occuring Sparsely
+
+def exception_handler(func):
+	def wrapper(*args, **kwargs):
+		try:
+			func(*args, **kwargs)
+		except Exception as e:
+			print()
+			redText(f"FATAL ERROR: {e}")
+	return wrapper
 
 class FlaskBlueprintCreator:
 	directory = ''
@@ -21,10 +29,11 @@ class FlaskBlueprintCreator:
 		self.project_name = project_name
 
 	#This Function Writes files to the respective directories and logs the status out
+	@exception_handler
 	def file_writer(self, filename, source):
 		with open(os.path.join(self.directory, self.project_name, filename), "w") as f:
 			f.write(source)
-		print("Created: " + os.path.join(self.directory, self.project_name, filename))
+		greenText("Created: " + os.path.join(self.directory, self.project_name, filename))
 
 	def get_blueprint_route(self, project_name, name):
 		return f"""from flask import render_template, request, Blueprint
@@ -36,12 +45,14 @@ def {name}_home():
 """
 
 	#This Function uses Virtualenv to create a new Virtual Environment in the Root Directory
+	@exception_handler
 	def create_virtual_env(self):
-		print("Creating Virtual Environment (might take some time)...")
+		cyanText("Creating Virtual Environment (might take some time)...")
 		proc = subprocess.Popen('virtualenv venv', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 		out, err = proc.communicate()
-		print("Created: Python Virtual Environment (venv)")
+		greenText("Created: Python Virtual Environment (venv)")
 
+	@exception_handler
 	def hard_delete_tree(self, dx):
 		import stat
 
@@ -58,28 +69,30 @@ def {name}_home():
 				shutil.rmtree(tmp, onerror=on_rm_error)
 		shutil.rmtree(dx)
 
-
+	@exception_handler
 	def git_clone(self):
-		print("Cloning Base Project (might take some time)...")
+		cyanText("Cloning Base Project (might take some time)...")
 		proc = subprocess.Popen('git clone https://github.com/synapsecode/Flask-APIBlueprintTemplate.git', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 		out, err = proc.communicate()
-		print("Cloned: BaseProject")
+		greenText("Cloned: BaseProject")
 
 		src = os.path.join(self.directory, 'Flask-APIBlueprintTemplate', 'ExampleAPI')
 		dst = os.path.join(self.directory)
 		shutil.move(src, dst)
 		
 		self.hard_delete_tree(os.path.join(self.directory,'Flask-APIBlueprintTemplate'))
-		print("\nCleaned Up Successfully")
+		greenText("Initial Structure Cleanup Completed")
 
+	@exception_handler
 	def replace_in_files(self, before, after, ext):
-		for filepath in glob.iglob(f'./**/*.{ext}', recursive=True):
+		for filepath in glob.iglob(f"{os.path.join(self.directory, 'ExampleAPI')}/**/*.{ext}", recursive=True):
 			with open(filepath, encoding="utf8") as file:
 				s = file.read()
 			s = s.replace(before, after)
 			with open(filepath, "w", encoding='utf8') as file:
 				file.write(s)
 
+	@exception_handler
 	def manipulate_files(self):
 		os.rename(os.path.join(self.directory,'ExampleAPI'), os.path.join(self.directory,self.project_name))
 		os.rename(os.path.join(self.directory, self.project_name, 'ExampleAPI'), os.path.join(self.directory, self.project_name, self.project_name))
@@ -93,34 +106,34 @@ def {name}_home():
 		self.replace_in_files("ExampleAPI", self.project_name, 'py')
 		self.replace_in_files("ExampleAPI", self.project_name, 'txt')
 
-		#Returns New Root
-		return os.path.join(self.directory,self.project_name)
-
+	@exception_handler
 	def install_dependencies(self):
-		print("Installing PIP Packages (might take some time)...")
+		cyanText("Installing PIP Packages (might take some time)...")
 		proc = subprocess.Popen('"venv/Scripts/activate" && pip install -r requirements.txt', shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 		out, err = proc.communicate()
-		print("Installed: Python Dependencies")
+		greenText("Installed: Python Dependencies")
 		os.remove(os.path.join(self.directory, self.project_name, 'requirements.txt'))
 
 	
 	#==================================RUNNERS=================================================
-
+	@exception_handler
 	def create_api(self):
 		os.chdir(os.path.join(self.directory)) #Move into Destination Directory
 		self.git_clone() #Perform a GitClone (in dest)
-		n_root = self.manipulate_files() #Manipulate the Cloned Folder Structure
-		os.chdir(n_root) #Move to new Root
+		self.manipulate_files() #Manipulate the Cloned Folder Structure
+		os.chdir(os.path.join(self.directory,self.project_name)) #Move to new Root
 		self.create_virtual_env()
 		self.install_dependencies()
 
 	#Deletion
+	@exception_handler
 	def delete_rest_api(self):
-		print("Deleting Flask(Blueprint) REST_API")
+		cyanText("Deleting Flask(Blueprint) REST_API")
 		import shutil
 		shutil.rmtree(os.path.join(self.directory, self.project_name))
-		print(f"Deleted: Flask Project '{self.project_name}''")
+		greenText(f"Deleted: Flask Project '{self.project_name}''")
 
+	@exception_handler
 	def create_rest_blueprint(self, name):
 		subroot = os.path.join(self.directory, self.project_name, self.project_name)
 		os.chdir(subroot) #Enter Subroot
@@ -144,23 +157,24 @@ def {name}_home():
 		with open(os.path.join(subroot, '__init__.py'), "w") as f:
 			f.write(dat)
 
-		print("Updated: __init__.py")
-		print(f"Successfully Created REST_API Blueprint: '{name}'")
+		greenText("Updated: __init__.py")
+		greenText(f"Successfully Created REST_API Blueprint: '{name}'")
 
-
+	@exception_handler
 	def delete_blueprint(self, name):
 		import shutil
 		loc = os.path.join(self.directory, self.project_name, self.project_name, name)
 		shutil.rmtree(loc)
-		print(f"Deleted: Blueprint '{name}' from Flask Project '{self.project_name}'")
+		greenText(f"Deleted: Blueprint '{name}' from Flask Project '{self.project_name}'")
 
 
 if(__name__ == '__main__'):
-	print("========== Flask Blueprint Creation Tool ==========")
+	yellowText("============== Flask Blueprint Creation Tool ==============")
 	directory = sys.argv[1]
 	c1 = sys.argv[2]
 	c2 = sys.argv[3]
 	c3 = sys.argv[4]
+
 
 	fbc = FlaskBlueprintCreator(directory=directory, project_name=c3)
 
@@ -180,4 +194,4 @@ if(__name__ == '__main__'):
 			pass
 		elif(c2 == 'blueprint'):
 			fbc.delete_blueprint(c3.split("/")[1])
-	print("==================== DONE ========================")
+	yellowText("========================= DONE ============================")
