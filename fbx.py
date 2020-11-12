@@ -85,7 +85,7 @@ def {name}_home():
 
 	@exception_handler
 	def replace_in_files(self, before, after, ext):
-		for filepath in glob.iglob(f"{os.path.join(self.directory, 'ExampleAPI')}/**/*.{ext}", recursive=True):
+		for filepath in glob.iglob(f"{os.path.join(self.directory, self.project_name)}/**/*.{ext}", recursive=True):
 			with open(filepath, encoding="utf8") as file:
 				s = file.read()
 			s = s.replace(before, after)
