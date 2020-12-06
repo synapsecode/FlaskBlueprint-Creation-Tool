@@ -8,6 +8,13 @@ Hence, for bigger projects, we need a more well defined structure. Enter, Flask 
 ## Why this Script?
 Flask Blueprints are a pain to setup. You may often times find yourself cloning templates and then manually editing and renaming everything. My Script does all of that for you. It can also make and delete blueprints on demand. This is incredibly useful if you're serious about development with Flask! It saves enormous amounts of time
 
+## What does the Script do?
+1. Clones a Base Flask Blueprint API Template into the directory from where you call it
+2. Modifies it to match your requirements
+3. Installs a Python Virtual environment
+4. Installs needed dependencies
+
+
 ## Creating a Flask API Project
 A Flask API Project is a simplified version of the Blueprints specification that basically removes all SSR and only enables enough to create REST APIs using Flask. This is very useful if you want to make APIs
 > (ALL Calls to be made from outside the project directory)
@@ -15,9 +22,12 @@ A Flask API Project is a simplified version of the Blueprints specification that
 ```
 fbx create api <project_name>
 ```
-
+>> ![dfff](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/1.JPG)
 >>  ### Generated Structure
 >>>  Flask Blueprints API Structure
+
+>>> ![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/struct.JPG)
+  
   
   
 ## Adding Blueprints
@@ -26,25 +36,29 @@ fbx create api <project_name>
 fbx create blueprint <project_name>/<blueprint_name>
 ```
 
+>> ![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/2.JPG)
+
 >> ### Updated Structure
 >>>  Adding a blueprint updates the Folder Tree
+
+>>>> ![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/struct2.JPG)
 
 ## Deleting Blueprints
 ```
 fbx delete blueprint <project_name>/<blueprint_name>
 ```
+![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/3.JPG)
+
+>> ### Updated Structure
+>>> ![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/struct.JPG)
 
 ## Deleting Flask API Project
 ```
 fbx delete api <project_name>
 ```
 
+![](https://github.com/synapsecode/FlaskBlueprint-Creation-Tool/blob/main/GithubData/4.JPG)
 
-## What does the Script do?
-1. Clones a Base Flask Blueprint API Template into the directory from where you call it
-2. Modifies it to match your requirements
-3. Installs a Python Virtual environment
-4. Installs needed dependencies
 
 
 
