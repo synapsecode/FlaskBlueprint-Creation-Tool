@@ -6,8 +6,8 @@ import glob
 
 def greenText(s): print("\033[92m{}\033[00m".format(s)) #Colors the text green
 def redText(s): print("\033[91m{}\033[00m".format(s)) #Colors the text green
-def cyanText(skk): print("\033[96m{}\033[00m" .format(skk)) #Colors the text cyan
-def yellowText(skk): print("\033[93m{}\033[00m" .format(skk)) #Colors the text yelllow
+def cyanText(skk): print("\033[96m{}\033[00m".format(skk)) #Colors the text cyan
+def yellowText(skk): print("\033[93m{}\033[00m".format(skk)) #Colors the text yelllow
 
 
 def exception_handler(func):
