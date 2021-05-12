@@ -1,5 +1,5 @@
 # FlaskBlueprint Creation Tool
- A simple Python script that generates a Flask blueprint enabled project on demand! and also has the ability to add or remove blueprints.
+ A simple Python script that generates a Flask blueprint enabled project on demand! and also has the ability to add or remove flask blueprints.
  
 ## What are Flask Blueprints?
 Flask is a really simple python based microframework for the web. You can create an api with as little as 2 to 3 files and very few lines of code. Flask is perfect for small projects and hobbyist projects. However, flask also has the ability to do much more! You can use it as an API but you can also use it for Server Side Rendering using Jinja2
